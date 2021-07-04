@@ -179,7 +179,7 @@ ads.showGooglerewarded(ads.GoogleRewardedAdCode, new Callable<Void>() {
   
 ## Quick Links
 
- - [Click Here to Download `adsManager.java`](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [Click Here to Download `adsManager.java`](https://raw.githubusercontent.com/soukarja/Android-Ads-Mediation-Push-Notification/main/adsManager.java)
  - [FaceBook Audience Network](https://business.facebook.com/pub/home)
  - [Google Admob](https://apps.admob.com/v2/home)
 
