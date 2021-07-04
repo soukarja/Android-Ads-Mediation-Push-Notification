@@ -12,20 +12,20 @@ Onesignal Push Notifications and Ads Mediation for Facebook Audience Network and
 
 #### Required Changes in android > defaultconfig in ``build.gradle(:app)``
 
-```bash
+```
 multiDexEnabled true
 ```
 
 #### Required dependencies in ``build.gradle(:app)``
 
-```bash
+```
 implementation 'com.onesignal:OneSignal:4.4.0'
 implementation 'com.google.android.gms:play-services-ads:20.2.0'
 implementation 'com.google.ads.mediation:facebook:6.5.0.0'
 ```
 #### Facebook network_security_config file for Ads Cache
 Create a New XML Resource in xml > values > ``network_security_config.xml``
-```bash
+```
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     ...
