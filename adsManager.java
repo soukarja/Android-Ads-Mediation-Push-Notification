@@ -411,6 +411,14 @@ public class adsManager {
                             // Set the ad reference to null so you don't show the ad a second time.
 //                            Log.d(TAG, "Ad was dismissed.");
                             mRewardedAd = null;
+                            if (isRewarded)
+                            {
+                                try {
+                                    onRewared.call();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     });
 
@@ -421,14 +429,7 @@ public class adsManager {
                             Log.d("adsTest", "The user earned the Google reward.");
 //                            int rewardAmount = rewardItem.getAmount();
 //                            String rewardType = rewardItem.getType();
-//                            isRewarded = true;
                             isRewarded = true;
-
-                            try {
-                                onRewared.call();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
 
                         }
                     });
