@@ -42,7 +42,8 @@ import java.util.concurrent.Callable;
 
 public class adsManager {
 
-    private int maxAdClicksPerDay = 5;
+    private int maxFBAdClicksPerDay = 3;
+    private int maxGoogleAdClicksPerDay = 2;
     private int maxCTRPerDay = 30;
     private String ONESIGNAL_APP_ID;
 
@@ -99,13 +100,18 @@ public class adsManager {
             this.FacebookBanner1 = "";
             this.FacebookBanner2 = "";
             this.FacebookBanner3 = "";
+
             this.FacebookInterstitialAdCode = "";
+
             this.FacebookRewardedAdCode = "";
 
-            this.GoogleInterstitialAdCode = "";
+
             this.GoogleBanner1 = "";
             this.GoogleBanner2 = "";
             this.GoogleBanner3 = "";
+
+            this.GoogleInterstitialAdCode = "";
+
             this.GoogleRewardedAdCode = "";
         }
 
@@ -575,13 +581,13 @@ public class adsManager {
         if (clicks + impressions <= 0)
             return true;
 
-        if (clicks >= this.maxAdClicksPerDay)
+        if (clicks >= this.maxFBAdClicksPerDay)
             return false;
 
-        int calcCTR = (int) Math.ceil((clicks * 100) / impressions);
-
-        if (calcCTR >= this.maxCTRPerDay && impressions > 3)
-            return false;
+//        int calcCTR = (int) Math.ceil((clicks * 100) / impressions);
+//
+//        if (calcCTR >= this.maxCTRPerDay && impressions > 3)
+//            return false;
 
         return true;
     }
@@ -594,13 +600,13 @@ public class adsManager {
         if (clicks + impressions <= 0)
             return true;
 
-        if (clicks >= this.maxAdClicksPerDay)
+        if (clicks >= this.maxGoogleAdClicksPerDay)
             return false;
 
-        int calcCTR = (int) Math.ceil((clicks * 100) / impressions);
-
-        if (calcCTR >= this.maxCTRPerDay && impressions > 3)
-            return false;
+//        int calcCTR = (int) Math.ceil((clicks * 100) / impressions);
+//
+//        if (calcCTR >= this.maxCTRPerDay && impressions > 3)
+//            return false;
 
         return true;
     }
