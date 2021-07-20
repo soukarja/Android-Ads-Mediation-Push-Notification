@@ -24,7 +24,7 @@ implementation 'com.google.android.gms:play-services-ads:20.2.0'
 implementation 'com.google.ads.mediation:facebook:6.5.0.0'
 ```
 #### Facebook network_security_config file for Ads Cache
-Create a New XML Resource in res >  xml ``network_security_config.xml``
+Create a New XML Resource in res >  xml >  ``network_security_config.xml``
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
