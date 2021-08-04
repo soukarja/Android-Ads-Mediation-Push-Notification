@@ -73,7 +73,7 @@ public class adsManager {
     public adsManager(Activity activity, boolean testMode) {
         this.context = activity.getApplicationContext();
         this.activity = activity;
-        AudienceNetworkAds.initialize(context);
+        AudienceNetworkAds.initialize(activity.getApplicationContext());
 
         this.ONESIGNAL_APP_ID = "";
         this.SHARED_PREF = "adsSettings";
@@ -134,7 +134,7 @@ public class adsManager {
 
     //Function Required to Get Current Date - Used to log Ad Activity into Shared Preferences
     private String getDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("mmddyyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
         String date = dateFormat.format(new Date());
         return date;
     }
@@ -387,7 +387,7 @@ public class adsManager {
 
     //Function Overloading to show Interstitial Ads if the Ad Codes are mentioned within the AdsManager Class
     public void showInterstitialAds() {
-        showInterstitialAds(this.FacebookInterstitialAdCode, this.GoogleInterstitialAdCode);
+        showInterstitialAds(FacebookInterstitialAdCode, GoogleInterstitialAdCode);
     }
 
     //Rewarded Ads
