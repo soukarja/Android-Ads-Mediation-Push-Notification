@@ -42,10 +42,16 @@ import java.util.concurrent.Callable;
 
 public class adsManager {
 
+    // Version 2.0
+
     private int maxFBAdClicksPerDay = 3;
     private int maxGoogleAdClicksPerDay = 2;
     private int maxCTRPerDay = 30;
     private String ONESIGNAL_APP_ID;
+
+    private boolean useBidding;
+    private boolean facebookSafeMode;
+    private boolean googleSafeMode;
 
 
     public String FacebookBanner1, FacebookBanner2, FacebookBanner3;
@@ -80,6 +86,9 @@ public class adsManager {
         this.sp = context.getSharedPreferences(this.SHARED_PREF, Context.MODE_PRIVATE);
         this.ed = sp.edit();
 
+        this.useBidding = true;
+
+
         if (testMode) {
 
             AdSettings.setTestMode(true);
@@ -95,6 +104,10 @@ public class adsManager {
             this.GoogleBanner3 = "ca-app-pub-3940256099942544/6300978111";
             this.GoogleInterstitialAdCode = "ca-app-pub-3940256099942544/1033173712";
             this.GoogleRewardedAdCode = "ca-app-pub-3940256099942544/5224354917";
+
+
+            this.facebookSafeMode = false;
+            this.googleSafeMode = false;
         } else {
 
             this.FacebookBanner1 = "";
@@ -113,6 +126,10 @@ public class adsManager {
             this.GoogleInterstitialAdCode = "";
 
             this.GoogleRewardedAdCode = "";
+
+
+            this.facebookSafeMode = true;
+            this.googleSafeMode = true;
         }
 
         MobileAds.initialize(activity, new OnInitializationCompleteListener() {
@@ -261,10 +278,19 @@ public class adsManager {
 
     //Function to show Banner Ads previously Created, with Preference given to Facebook and then Google
     public void showBannerAds(com.facebook.ads.AdView fBBanner, com.google.android.gms.ads.AdView googleBanner) {
-        if (canShowFacebookAds())
-            showFacebookBanner(fBBanner, googleBanner);
-        else if (canShowGoogleAds())
-            showGoogleBanner(googleBanner, fBBanner);
+
+        if (useBidding) {
+            if (canShowGoogleAds())
+                showGoogleBanner(googleBanner, fBBanner);
+            else if (canShowFacebookAds())
+                showFacebookBanner(fBBanner, googleBanner);
+        } else {
+            if (canShowFacebookAds())
+                showFacebookBanner(fBBanner, googleBanner);
+            else if (canShowGoogleAds())
+                showGoogleBanner(googleBanner, fBBanner);
+        }
+
     }
 
 
@@ -379,10 +405,19 @@ public class adsManager {
 
     //Function to show Interstitial Ads, with Preference given to Facebook and then Google
     public void showInterstitialAds(String facebookAdCode, String googleAdCode) {
-        if (canShowFacebookAds())
-            showFacebookInterstitial(facebookAdCode, googleAdCode);
-        else if (canShowGoogleAds())
-            showGoogleInterstitial(googleAdCode, facebookAdCode);
+
+        if (useBidding) {
+            if (canShowGoogleAds())
+                showGoogleInterstitial(googleAdCode, facebookAdCode);
+            else if (canShowFacebookAds())
+                showFacebookInterstitial(facebookAdCode, googleAdCode);
+
+        } else {
+            if (canShowFacebookAds())
+                showFacebookInterstitial(facebookAdCode, googleAdCode);
+            else if (canShowGoogleAds())
+                showGoogleInterstitial(googleAdCode, facebookAdCode);
+        }
     }
 
     //Function Overloading to show Interstitial Ads if the Ad Codes are mentioned within the AdsManager Class
@@ -417,8 +452,7 @@ public class adsManager {
                             // Set the ad reference to null so you don't show the ad a second time.
 //                            Log.d(TAG, "Ad was dismissed.");
                             mRewardedAd = null;
-                            if (isRewarded)
-                            {
+                            if (isRewarded) {
                                 try {
                                     onRewared.call();
                                 } catch (Exception e) {
@@ -575,6 +609,9 @@ public class adsManager {
 
     //Returns True if showing Facebook Ads are Safe. Otherwise returns false.
     public boolean canShowFacebookAds() {
+        if (!facebookSafeMode)
+            return true;
+
         int clicks = sp.getInt("fbclicks_" + getDate(), 0);
         int impressions = sp.getInt("fbimp_" + getDate(), 0);
 
@@ -594,6 +631,9 @@ public class adsManager {
 
     //Returns True if showing Google Ads are Safe. Otherwise returns false.
     public boolean canShowGoogleAds() {
+        if (!googleSafeMode)
+            return true;
+
         int clicks = sp.getInt("googleclicks_" + getDate(), 0);
         int impressions = sp.getInt("googleimp_" + getDate(), 0);
 
@@ -650,6 +690,19 @@ public class adsManager {
     //Function Overloading to set-up Onesignal Notification Integration if App id is defined within the adsManagerClass
     public void setupOnegignalIntegration() {
         setupOnegignalIntegration(this.ONESIGNAL_APP_ID);
+    }
+
+
+    private void useBiddingAds(boolean useBidding) {
+        this.useBidding = useBidding;
+    }
+
+    private void setFacebookSafeMode(boolean facebookSafeMode) {
+        this.facebookSafeMode = facebookSafeMode;
+    }
+
+    private void setGoogleSafeMode(boolean googleSafeMode) {
+        this.googleSafeMode = googleSafeMode;
     }
 
 }
