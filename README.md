@@ -20,8 +20,8 @@ multiDexEnabled true
 
 ```
 implementation 'com.onesignal:OneSignal:4.4.0'
-implementation 'com.google.android.gms:play-services-ads:20.2.0'
-implementation 'com.google.ads.mediation:facebook:6.5.0.0'
+implementation 'com.google.android.gms:play-services-ads:20.4.0'
+implementation 'com.google.ads.mediation:facebook:6.7.0.0'
 ```
 #### Facebook network_security_config file for Ads Cache
 Create a New XML Resource in res >  xml >  ``network_security_config.xml``
@@ -92,6 +92,22 @@ android:networkSecurityConfig="@xml/network_security_config"
 </manifest>
 ```
 
+#### Setup Ad Codes in strings.xml File
+Add the following lines in res >  values >  ``strings.xml``
+```
+<string name="facebook_banner1">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
+<string name="facebook_banner2">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
+<string name="facebook_banner3">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
+<string name="facebook_interstitial1">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
+<string name="facebook_rewarded1">YOUR_PLACEMENT_ID</string>
+
+<string name="google_banner1">ca-app-pub-3940256099942544/6300978111</string>
+<string name="google_banner2">ca-app-pub-3940256099942544/6300978111</string>
+<string name="google_banner3">ca-app-pub-3940256099942544/6300978111</string>
+<string name="google_interstitial1">ca-app-pub-3940256099942544/1033173712</string>
+<string name="google_rewarded1">ca-app-pub-3940256099942544/5224354917</string>
+```
+
   
 ## Usage
 
@@ -144,6 +160,15 @@ ads.showInterstitialAds(ads.FacebookInterstitialAdCode, ads.GoogleInterstitialAd
 
 // ads.showGoogleInterstitial(ads.GoogleInterstitialAdCode); //Show Only Google Interstitial Ad
 // ads.showFacebookInterstitial(ads.FacebookInterstitialAdCode); //Show only Facebook Interstitial Ad
+```
+
+
+### Preload Interstitial Ads (For Admob or Bidding Integrated)
+```
+//Preloads Interstitial for Faster Calling
+ads.preLoadGoogleInterstitialAD(ads.GoogleInterstitialAdCode); //or simply ads.preLoadGoogleInterstitialAD();
+
+ads.showPreloadedGoogleInterstitialAd(); //display the Preloaded Interstitial or calls a new one & preloads for next usage if already not preloaded
 ```
 
 ### Rewarded Ads
