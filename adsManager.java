@@ -42,7 +42,7 @@ import java.util.concurrent.Callable;
 
 public class adsManager {
 
-    // Version 2.0
+    // Version 2.1
 
     private int maxFBAdClicksPerDay = 3;
     private int maxGoogleAdClicksPerDay = 2;
@@ -110,22 +110,22 @@ public class adsManager {
             this.googleSafeMode = false;
         } else {
 
-            this.FacebookBanner1 = "";
-            this.FacebookBanner2 = "";
-            this.FacebookBanner3 = "";
+            this.FacebookBanner1 = this.context.getString(R.string.facebook_banner1);
+            this.FacebookBanner2 = this.context.getString(R.string.facebook_banner2);
+            this.FacebookBanner3 = this.context.getString(R.string.facebook_banner3);
 
-            this.FacebookInterstitialAdCode = "";
+            this.FacebookInterstitialAdCode = this.context.getString(R.string.facebook_interstitial1);
 
-            this.FacebookRewardedAdCode = "";
+            this.FacebookRewardedAdCode = this.context.getString(R.string.facebook_rewarded1);
 
 
-            this.GoogleBanner1 = "";
-            this.GoogleBanner2 = "";
-            this.GoogleBanner3 = "";
+            this.GoogleBanner1 = this.context.getString(R.string.google_banner1);
+            this.GoogleBanner2 = this.context.getString(R.string.google_banner2);
+            this.GoogleBanner3 = this.context.getString(R.string.google_banner3);
 
-            this.GoogleInterstitialAdCode = "";
+            this.GoogleInterstitialAdCode = this.context.getString(R.string.google_interstitial1);
 
-            this.GoogleRewardedAdCode = "";
+            this.GoogleRewardedAdCode = this.context.getString(R.string.google_rewarded1);
 
 
             this.facebookSafeMode = true;
@@ -419,6 +419,58 @@ public class adsManager {
                 showGoogleInterstitial(googleAdCode, facebookAdCode);
         }
     }
+
+    //Function to Preload Google Interstitials (Or when Bidding is Used). Ad is Loaded But Not Shown
+    public void preLoadGoogleInterstitialAD(String googleAdCode) {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        com.google.android.gms.ads.interstitial.InterstitialAd.load(context, googleAdCode, adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
+//                super.onAdLoaded(interstitialAd);
+                GoogleinterstitialAd = interstitialAd;
+                GoogleinterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        // Called when fullscreen content is dismissed.
+//                        Log.d("TAG", "The ad was dismissed.");
+                    }
+
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        // Called when fullscreen content is shown.
+                        // Make sure to set your reference to null so you don't
+                        // show it a second time.
+                        GoogleinterstitialAd = null;
+                        preLoadGoogleInterstitialAD(googleAdCode);
+                    }
+                });
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+//                super.onAdFailedToLoad(loadAdError);
+                GoogleinterstitialAd = null;
+                Log.d("adsTest", "Failed to Preload Google Ad");
+            }
+        });
+
+    }
+
+    //Function Overloading to Preload Google Interstitials
+    public void preLoadGoogleInterstitialAD() {
+        preLoadGoogleInterstitialAD(GoogleInterstitialAdCode);
+    }
+
+    //Function to display already Preloaded Google Interstitial Ads. If Not Loaded, Loads a new Interstitial Ad and Preloads another ad for later use
+    public void showPreloadedGoogleInterstitialAd() {
+        if (GoogleinterstitialAd != null) {
+            GoogleinterstitialAd.show(activity);
+        } else {
+            showInterstitialAds();
+            preLoadGoogleInterstitialAD();
+        }
+    }
+
 
     //Function Overloading to show Interstitial Ads if the Ad Codes are mentioned within the AdsManager Class
     public void showInterstitialAds() {
