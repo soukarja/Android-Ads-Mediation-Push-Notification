@@ -95,17 +95,17 @@ android:networkSecurityConfig="@xml/network_security_config"
 #### Setup Ad Codes in strings.xml File
 Add the following lines in res >  values >  ``strings.xml``
 ```
-<string name="facebook_banner1">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
-<string name="facebook_banner2">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
-<string name="facebook_banner3">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
-<string name="facebook_interstitial1">IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID</string>
-<string name="facebook_rewarded1">YOUR_PLACEMENT_ID</string>
+<string name="facebook_banner1"></string>
+<string name="facebook_banner2"></string>
+<string name="facebook_banner3"></string>
+<string name="facebook_interstitial1"></string>
+<string name="facebook_rewarded1"></string>
 
-<string name="google_banner1">ca-app-pub-3940256099942544/6300978111</string>
-<string name="google_banner2">ca-app-pub-3940256099942544/6300978111</string>
-<string name="google_banner3">ca-app-pub-3940256099942544/6300978111</string>
-<string name="google_interstitial1">ca-app-pub-3940256099942544/1033173712</string>
-<string name="google_rewarded1">ca-app-pub-3940256099942544/5224354917</string>
+<string name="google_banner1"></string>
+<string name="google_banner2"></string>
+<string name="google_banner3"></string>
+<string name="google_interstitial1"></string>
+<string name="google_rewarded1"></string>
 ```
 
   
