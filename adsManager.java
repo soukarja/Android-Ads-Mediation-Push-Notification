@@ -42,7 +42,7 @@ import java.util.concurrent.Callable;
 
 public class adsManager {
 
-    // Version 2.1
+    // Version 2.2
 
     private int maxFBAdClicksPerDay = 3;
     private int maxGoogleAdClicksPerDay = 2;
@@ -389,14 +389,14 @@ public class adsManager {
             @Override
             public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
 //                super.onAdLoaded(interstitialAd);
-                GoogleinterstitialAd = interstitialAd;
-                GoogleinterstitialAd.show(activity);
+//                GoogleinterstitialAd = interstitialAd;
+                interstitialAd.show(activity);
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
 //                super.onAdFailedToLoad(loadAdError);
-                GoogleinterstitialAd = null;
+//                GoogleinterstitialAd = null;
                 if (!fbAdCode.equals("") && canShowFacebookAds())
                     showFacebookInterstitial(fbAdCode);
             }
@@ -450,10 +450,49 @@ public class adsManager {
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
 //                super.onAdFailedToLoad(loadAdError);
                 GoogleinterstitialAd = null;
+                preLoadGoogleInterstitialAD(googleAdCode);
                 Log.d("adsTest", "Failed to Preload Google Ad");
             }
         });
 
+    }
+
+    public void showPreloadedGoogleInterstitialAd(Callable<Void> onShown) {
+        if (GoogleinterstitialAd != null) {
+            GoogleinterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull com.google.android.gms.ads.AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                    GoogleinterstitialAd = null;
+                    preLoadGoogleInterstitialAD();
+                    try {
+                        onShown.call();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent();
+                    GoogleinterstitialAd = null;
+                    preLoadGoogleInterstitialAD();
+                    try {
+                        onShown.call();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            GoogleinterstitialAd.show(activity);
+        } else {
+            preLoadGoogleInterstitialAD();
+            try {
+                onShown.call();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //Function Overloading to Preload Google Interstitials
@@ -547,6 +586,84 @@ public class adsManager {
         });
 
 //        return isRewarded;
+    }
+
+    public void preloadGoogleRewardedAd() {
+        preloadGoogleRewardedAd(GoogleRewardedAdCode, FacebookRewardedAdCode);
+    }
+
+    public void preloadGoogleRewardedAd(String adCode, String fbADCode) {
+        isRewarded = false;
+        RewardedAd.load(context, adCode, new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                super.onAdLoaded(rewardedAd);
+                mRewardedAd = rewardedAd;
+                Log.d("adsTest", "Google Rewarded Ad was loaded.");
+
+                if (mRewardedAd != null) {
+                    mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            // Called when ad is shown.
+                            Log.d("adsTest", "Google Rewarded Ad was shown.");
+                            updateGoogleImpressions();
+                        }
+
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            // Called when ad is dismissed.
+                            // Set the ad reference to null so you don't show the ad a second time.
+//                            Log.d(TAG, "Ad was dismissed.");
+                            mRewardedAd = null;
+                        }
+                    });
+
+
+                } else {
+                    Log.d("adsTest", "The Google rewarded ad wasn't ready yet.");
+                    isRewarded = false;
+                }
+
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                mRewardedAd = null;
+                isRewarded = false;
+            }
+        });
+
+//        return isRewarded;
+    }
+
+    public void showPreloadedGoogleRewardedAd(Callable<Void> onRewarded) {
+        if (mRewardedAd != null) {
+            mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // Handle the reward.
+                    Log.d("adsTest", "The user earned the Google reward.");
+//                            int rewardAmount = rewardItem.getAmount();
+//                            String rewardType = rewardItem.getType();
+                    isRewarded = true;
+                    try {
+                        onRewarded.call();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            });
+        }
+        else {
+            preloadGoogleRewardedAd();
+            Toast.makeText(context, "The Ad isn;t Ready yet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     //Show Google Rewared Ads, with a callback function executed when the user is Rewarded
