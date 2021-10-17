@@ -151,7 +151,7 @@ ads.showBannerAds(faceBookBanner, googleBanner);
 ```
 ##### One Liner
 ```
-ads.showBannerAds(ads.createFacebookBanner("AD_Code", (LinearLayout) findViewById(R.id.BannerBox)), ads.createGoogleBanner("AD_code", (LinearLayout) findViewById(R.id.BannerBox)));
+ads.showBannerAds(ads.createFacebookBanner(ads.FacebookBanner1, (LinearLayout) findViewById(R.id.BannerBox)), ads.createGoogleBanner(ads.GoogleBanner1, (LinearLayout) findViewById(R.id.BannerBox)));
 ```
 
 ### Interstitial Ads
